@@ -1,5 +1,4 @@
 ﻿#include <iostream>
-#include <string>
 #include <vector>
 #include "Paciente.hpp"
 #include "Doctor.hpp"
@@ -51,5 +50,6 @@ int main() {
     std::cout << "\nPresione Enter para salir...";
     std::cin.ignore();
     std::cin.get();
+
     return 0;
 }
