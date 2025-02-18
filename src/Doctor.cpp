@@ -1,25 +1,25 @@
-// Sesión 6 - Programación orientada a objetos I
-// - Principios básicos de la programación orientada a objetos
-// implementación de la clase Doctor, igual que hicimos con Paciente
+// Sesión 6 - POO I
+// Esta implementación es muy parecida a la de Paciente porque las clases son bastante similares
 
 #include "Doctor.hpp"
 
-// constructor vacío otra vez, igual que en paciente
+// Constructor vacío, igual que en Paciente
 Doctor::Doctor() {
     nombre = "";
     id = "";
     especialidad = "";
-    disponible = true;  // por defecto está disponible
+    disponible = true;  // Por defecto está disponible
 }
 
+// Constructor con todos los datos
 Doctor::Doctor(std::string nombre, std::string id, std::string especialidad) {
     this->nombre = nombre;
     this->id = id;
     this->especialidad = especialidad;
-    this->disponible = true;
+    this->disponible = true;  // Por defecto está disponible
 }
 
-// getters y setters
+// Los getters y setters, igualito que en Paciente
 std::string Doctor::getNombre() const {
     return nombre;
 }

@@ -1,6 +1,10 @@
-﻿#include "Cita.hpp"
+﻿// Sesión 6 - POO I
+// Esta es la implementación de la clase Cita
+// que une pacientes con doctores
 
-// Constructor vacío
+#include "Cita.hpp"
+
+// Constructor vacío, todo a valores por defecto
 Cita::Cita() {
     fecha = "";
     hora = "";
@@ -9,16 +13,16 @@ Cita::Cita() {
     urgente = false;
 }
 
-// Constructor con parámetros
+// Constructor con todos los datos necesarios para una cita
 Cita::Cita(std::string fecha, std::string hora, std::string idPaciente, std::string idDoctor) {
     this->fecha = fecha;
     this->hora = hora;
     this->idPaciente = idPaciente;
     this->idDoctor = idDoctor;
-    this->urgente = false;
+    this->urgente = false;  // Por defecto no es urgente
 }
 
-// Getters y setters
+// Los getters y setters de siempre
 std::string Cita::getFecha() const {
     return fecha;
 }

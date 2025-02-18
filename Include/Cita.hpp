@@ -1,6 +1,6 @@
-﻿// Sesión 6 - Programación orientada a objetos I
-// - Principios bбsicos de la programaciуn orientada a objetos
-// última clase que implementamos, ya casi acabamos
+﻿
+// conecta pacientes con doctores
+// relaciones entre clases
 
 #ifndef CITA_HPP
 #define CITA_HPP
@@ -11,17 +11,17 @@ class Cita {
 private:
     std::string fecha;
     std::string hora;
-    // guardo solo los IDs como strings y ya está
+    // Guardo solo los IDs como strings porque es más fácil
     std::string idPaciente;
     std::string idDoctor;
-    bool urgente;  // para las citas urgentes que tienen prioridad
+    bool urgente;  // Esto lo añadí para las citas urgentes que tienen prioridad
 
 public:
-    // lo demбs se queda igual
-    Cita();
-    // NUEVO: Constructor con todos los parámetros para crear citas completas
+    Cita();  // Constructor vacío por si acaso
+    // Este es el constructor principal que usamos para crear citas
     Cita(std::string fecha, std::string hora, std::string idPaciente, std::string idDoctor);
 
+    // Los getters y setters de siempre
     std::string getFecha() const;
     void setFecha(std::string fecha);
     std::string getHora() const;

@@ -1,12 +1,11 @@
-
-// Sesión 6 - Programación orientada a objetos I
-// - Principios básicos de la programación orientada a objetos
-// aquí implementamos todas las funciones que declaramos en el .hpp
+// Sesión 6 - POO I y Sesión 4 - Punteros y referencias
+// Aquí implemento todas las funciones que declaré en el .hpp
+// this-> que aprendimos en la sesión 4
 
 #include "Paciente.hpp"
 
-// constructor vacío, inicializo todo a valores por defecto
-// como nos dijo el profe que era buena práctica
+// Constructor vacío, inicio todo a valores por defecto
+
 Paciente::Paciente() {
     nombre = "";
     id = "";
@@ -14,19 +13,18 @@ Paciente::Paciente() {
     enfermedadCronica = false;
 }
 
-// constructor con todos los datos, este es el que usaremos normalmente
+// Este es el constructor que uso normalmente, con todos los datos
 Paciente::Paciente(std::string nombre, std::string id, std::string fechaIngreso) {
-    // Sesión 4 - Punteros y referencias
-    // uso el this-> que vimos en clase para evitar líos con los nombres
+    // Uso el this->
     this->nombre = nombre;
     this->id = id;
     this->fechaIngreso = fechaIngreso;
-    this->enfermedadCronica = false;  // por defecto no tiene enfermedad crónica
+    this->enfermedadCronica = false;  // Por defecto no tiene enfermedad crónica
 }
 
 // Sesión 3 - Funciones avanzadas
-// implementación de los getters y setters
-// son facilitos pero hay que ponerlos todos
+// Aquí van todos los getters y setters
+// Son súper simples pero hay que ponerlos todos
 std::string Paciente::getNombre() const {
     return nombre;
 }

@@ -6,17 +6,20 @@
 #include "Doctor.hpp"
 #include "Cita.hpp"
 
+// Variables globales (Sesión 2)
 std::vector<Paciente> pacientes;
 std::vector<Doctor> doctores;
 std::vector<Cita> citas;
 
+// Funciones de utilidad (Sesión 2 - Funciones)
 void limpiarBuffer() {
     std::cin.clear();
     std::cin.ignore(10000, '\n');
 }
 
+// Funciones de validación (Sesión 2 - Funciones)
 bool validarCadenaNoVacia(const std::string& cadena) {
-    if (cadena.length() == 0) {
+    if (cadena.empty()) {
         std::cout << "Error: El campo no puede estar vacio.\n";
         return false;
     }
@@ -24,10 +27,8 @@ bool validarCadenaNoVacia(const std::string& cadena) {
 }
 
 bool validarSoloLetras(const std::string& cadena) {
-    for (int i = 0; i < cadena.length(); i++) {
-        if (!((cadena[i] >= 'a' && cadena[i] <= 'z') ||
-            (cadena[i] >= 'A' && cadena[i] <= 'Z') ||
-            cadena[i] == ' ')) {
+    for (char c : cadena) {
+        if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == ' ')) {
             std::cout << "Error: Solo se permiten letras.\n";
             return false;
         }
@@ -36,8 +37,8 @@ bool validarSoloLetras(const std::string& cadena) {
 }
 
 bool validarSoloNumeros(const std::string& cadena) {
-    for (int i = 0; i < cadena.length(); i++) {
-        if (!(cadena[i] >= '0' && cadena[i] <= '9')) {
+    for (char c : cadena) {
+        if (!(c >= '0' && c <= '9')) {
             std::cout << "Error: Solo se permiten numeros.\n";
             return false;
         }
@@ -83,34 +84,41 @@ bool validarFormatoHora(const std::string& hora) {
         }
     }
     return true;
-}void guardarDatos() {
+}
+
+// Funciones para manejo de archivos (Sesión 3 - Acceso a archivos)
+void guardarDatos() {
+    // Guardar pacientes
     std::ofstream archivoPacientes("pacientes.txt");
-    for (int i = 0; i < pacientes.size(); i++) {
-        archivoPacientes << pacientes[i].getNombre() << "\n";
-        archivoPacientes << pacientes[i].getId() << "\n";
-        archivoPacientes << pacientes[i].getFechaIngreso() << "\n";
+    for (const auto& paciente : pacientes) {
+        archivoPacientes << paciente.getNombre() << "\n"
+            << paciente.getId() << "\n"
+            << paciente.getFechaIngreso() << "\n";
     }
     archivoPacientes.close();
 
+    // Guardar doctores
     std::ofstream archivoDoctores("doctores.txt");
-    for (int i = 0; i < doctores.size(); i++) {
-        archivoDoctores << doctores[i].getNombre() << "\n";
-        archivoDoctores << doctores[i].getId() << "\n";
-        archivoDoctores << doctores[i].getEspecialidad() << "\n";
+    for (const auto& doctor : doctores) {
+        archivoDoctores << doctor.getNombre() << "\n"
+            << doctor.getId() << "\n"
+            << doctor.getEspecialidad() << "\n";
     }
     archivoDoctores.close();
 
+    // Guardar citas
     std::ofstream archivoCitas("citas.txt");
-    for (int i = 0; i < citas.size(); i++) {
-        archivoCitas << citas[i].getFecha() << "\n";
-        archivoCitas << citas[i].getHora() << "\n";
-        archivoCitas << citas[i].getIdPaciente() << "\n";
-        archivoCitas << citas[i].getIdDoctor() << "\n";
+    for (const auto& cita : citas) {
+        archivoCitas << cita.getFecha() << "\n"
+            << cita.getHora() << "\n"
+            << cita.getIdPaciente() << "\n"
+            << cita.getIdDoctor() << "\n";
     }
     archivoCitas.close();
 }
 
 void cargarDatos() {
+    // Cargar pacientes
     std::ifstream archivoPacientes("pacientes.txt");
     std::string nombre, id, fecha;
     while (getline(archivoPacientes, nombre)) {
@@ -121,19 +129,21 @@ void cargarDatos() {
     }
     archivoPacientes.close();
 
+    // Cargar doctores
     std::ifstream archivoDoctores("doctores.txt");
+    std::string especialidad;
     while (getline(archivoDoctores, nombre)) {
         getline(archivoDoctores, id);
-        std::string especialidad;
         getline(archivoDoctores, especialidad);
         Doctor nuevoDoctor(nombre, id, especialidad);
         doctores.push_back(nuevoDoctor);
     }
     archivoDoctores.close();
 
+    // Cargar citas
     std::ifstream archivoCitas("citas.txt");
+    std::string hora, idPaciente, idDoctor;
     while (getline(archivoCitas, fecha)) {
-        std::string hora, idPaciente, idDoctor;
         getline(archivoCitas, hora);
         getline(archivoCitas, idPaciente);
         getline(archivoCitas, idDoctor);
@@ -141,126 +151,78 @@ void cargarDatos() {
         citas.push_back(nuevaCita);
     }
     archivoCitas.close();
-}void gestionPacientes() {
-    int opcion;
-    bool volver = false;
+}
 
-    while (!volver) {
-        std::cout << "\nGestion de Pacientes\n";
-        std::cout << "Pacientes registrados: " << pacientes.size() << "\n";
-        std::cout << "1. Registrar paciente\n";
-        std::cout << "2. Buscar paciente\n";
-        std::cout << "3. Listar pacientes\n";
-        std::cout << "4. Eliminar paciente\n";
-        std::cout << "5. Volver\n";
-        std::cout << "Seleccione una opcion: ";
+// Funciones de gestión (Sesión 2 - Funciones)
+void gestionPacientes() {
+    while (true) {
+        std::cout << "\nGestion de Pacientes\n"
+            << "1. Registrar paciente\n"
+            << "2. Buscar paciente\n"
+            << "3. Listar pacientes\n"
+            << "4. Eliminar paciente\n"
+            << "5. Volver\n"
+            << "Opcion: ";
+
+        int opcion;
         std::cin >> opcion;
         limpiarBuffer();
+
+        if (opcion == 5) break;
 
         switch (opcion) {
         case 1: {
             std::string nombre, id, fecha;
-            bool datosValidos = false;
 
-            while (!datosValidos) {
-                while (true) {
-                    std::cout << "Nombre: ";
-                    getline(std::cin, nombre);
-                    if (validarCadenaNoVacia(nombre) && validarSoloLetras(nombre)) {
-                        break;
-                    }
-                }
+            do {
+                std::cout << "Nombre: ";
+                getline(std::cin, nombre);
+            } while (!validarCadenaNoVacia(nombre) || !validarSoloLetras(nombre));
 
-                while (true) {
-                    std::cout << "ID: ";
-                    getline(std::cin, id);
+            do {
+                std::cout << "ID: ";
+                getline(std::cin, id);
+            } while (!validarSoloNumeros(id));
 
-                    bool idExiste = false;
-                    for (int i = 0; i < pacientes.size(); i++) {
-                        if (pacientes[i].getId() == id) {
-                            idExiste = true;
-                            break;
-                        }
-                    }
+            std::cout << "Fecha (YYYY-MM-DD): ";
+            getline(std::cin, fecha);
 
-                    if (validarSoloNumeros(id) && !idExiste) {
-                        break;
-                    }
-
-                    if (idExiste) {
-                        std::cout << "Error: El ID ya existe\n";
-                    }
-                }
-
-                while (true) {
-                    std::cout << "Fecha de ingreso (YYYY-MM-DD): ";
-                    getline(std::cin, fecha);
-                    if (validarFormatoFecha(fecha)) {
-                        break;
-                    }
-                }
-
-                std::cout << "\nDatos ingresados:\n";
-                std::cout << "Nombre: " << nombre << "\n";
-                std::cout << "ID: " << id << "\n";
-                std::cout << "Fecha: " << fecha << "\n";
-
-                std::string confirmar;
-                std::cout << "Son correctos? (s/n): ";
-                getline(std::cin, confirmar);
-
-                if (confirmar == "s" || confirmar == "S") {
-                    Paciente nuevoPaciente(nombre, id, fecha);
-                    pacientes.push_back(nuevoPaciente);
-                    std::cout << "Paciente registrado\n";
-                    datosValidos = true;
-                }
-            }
+            pacientes.push_back(Paciente(nombre, id, fecha));
+            std::cout << "Paciente registrado\n";
             break;
         }
         case 2: {
+            std::cout << "ID a buscar: ";
             std::string idBuscar;
-            std::cout << "ID del paciente a buscar: ";
             getline(std::cin, idBuscar);
 
-            bool encontrado = false;
-            for (int i = 0; i < pacientes.size(); i++) {
-                if (pacientes[i].getId() == idBuscar) {
-                    std::cout << "Paciente encontrado:\n";
-                    std::cout << "Nombre: " << pacientes[i].getNombre() << "\n";
-                    std::cout << "Fecha de ingreso: " << pacientes[i].getFechaIngreso() << "\n";
-                    encontrado = true;
+            for (const auto& paciente : pacientes) {
+                if (paciente.getId() == idBuscar) {
+                    std::cout << "Nombre: " << paciente.getNombre() << "\n"
+                        << "Fecha: " << paciente.getFechaIngreso() << "\n";
                     break;
                 }
-            }
-            if (!encontrado) {
-                std::cout << "Paciente no encontrado\n";
             }
             break;
         }
         case 3: {
-            if (pacientes.size() == 0) {
-                std::cout << "No hay pacientes registrados\n";
-            }
-            else {
-                std::cout << "Lista de pacientes:\n";
-                for (int i = 0; i < pacientes.size(); i++) {
-                    std::cout << "ID: " << pacientes[i].getId()
-                        << " - Nombre: " << pacientes[i].getNombre() << "\n";
-                }
+            for (const auto& paciente : pacientes) {
+                std::cout << "ID: " << paciente.getId()
+                    << " - Nombre: " << paciente.getNombre() << "\n";
             }
             break;
         }
         case 4: {
-            std::string idEliminar;
             std::cout << "ID del paciente a eliminar: ";
+            std::string idEliminar;
             getline(std::cin, idEliminar);
 
             bool encontrado = false;
-            for (int i = 0; i < pacientes.size(); i++) {
+            for (size_t i = 0; i < pacientes.size(); i++) {
                 if (pacientes[i].getId() == idEliminar) {
+                    // Verificar si el paciente tiene citas
                     bool tieneCitas = false;
-                    for (const Cita& cita : citas) {
+                    for (const auto& cita : citas) {
                         if (cita.getIdPaciente() == idEliminar) {
                             tieneCitas = true;
                             break;
@@ -271,7 +233,7 @@ void cargarDatos() {
                         std::cout << "No se puede eliminar el paciente porque tiene citas programadas\n";
                     }
                     else {
-                        std::cout << "Estas segura de eliminar al paciente " << pacientes[i].getNombre() << "? (s/n): ";
+                        std::cout << "Estas seguro de eliminar al paciente " << pacientes[i].getNombre() << "? (s/n): ";
                         std::string confirmar;
                         getline(std::cin, confirmar);
 
@@ -289,136 +251,84 @@ void cargarDatos() {
             }
             break;
         }
-        case 5:
-            volver = true;
-            break;
         default:
-            std::cout << "Opcion no valida\n";
+            std::cout << "Opcion invalida\n";
         }
     }
 }
 
 void gestionDoctores() {
-    int opcion;
-    bool volver = false;
+    while (true) {
+        std::cout << "\nGestion de Doctores\n"
+            << "1. Registrar doctor\n"
+            << "2. Buscar doctor\n"
+            << "3. Listar doctores\n"
+            << "4. Eliminar doctor\n"
+            << "5. Volver\n"
+            << "Opcion: ";
 
-    while (!volver) {
-        std::cout << "\nGestion de Doctores\n";
-        std::cout << "Doctores registrados: " << doctores.size() << "\n";
-        std::cout << "1. Registrar doctor\n";
-        std::cout << "2. Buscar doctor\n";
-        std::cout << "3. Listar doctores\n";
-        std::cout << "4. Eliminar doctor\n";
-        std::cout << "5. Volver\n";
-        std::cout << "Seleccione una opcion: ";
+        int opcion;
         std::cin >> opcion;
         limpiarBuffer();
+
+        if (opcion == 5) break;
 
         switch (opcion) {
         case 1: {
             std::string nombre, id, especialidad;
-            bool datosValidos = false;
 
-            while (!datosValidos) {
-                while (true) {
-                    std::cout << "Nombre: ";
-                    getline(std::cin, nombre);
-                    if (validarCadenaNoVacia(nombre) && validarSoloLetras(nombre)) {
-                        break;
-                    }
-                }
+            do {
+                std::cout << "Nombre: ";
+                getline(std::cin, nombre);
+            } while (!validarCadenaNoVacia(nombre) || !validarSoloLetras(nombre));
 
-                while (true) {
-                    std::cout << "ID: ";
-                    getline(std::cin, id);
+            do {
+                std::cout << "ID: ";
+                getline(std::cin, id);
+            } while (!validarSoloNumeros(id));
 
-                    bool idExiste = false;
-                    for (int i = 0; i < doctores.size(); i++) {
-                        if (doctores[i].getId() == id) {
-                            idExiste = true;
-                            break;
-                        }
-                    }
+            do {
+                std::cout << "Especialidad: ";
+                getline(std::cin, especialidad);
+            } while (!validarCadenaNoVacia(especialidad) || !validarSoloLetras(especialidad));
 
-                    if (validarSoloNumeros(id) && !idExiste) {
-                        break;
-                    }
-
-                    if (idExiste) {
-                        std::cout << "Error: El ID ya existe\n";
-                    }
-                }
-
-                while (true) {
-                    std::cout << "Especialidad: ";
-                    getline(std::cin, especialidad);
-                    if (validarCadenaNoVacia(especialidad) && validarSoloLetras(especialidad)) {
-                        break;
-                    }
-                }
-
-                std::cout << "\nDatos ingresados:\n";
-                std::cout << "Nombre: " << nombre << "\n";
-                std::cout << "ID: " << id << "\n";
-                std::cout << "Especialidad: " << especialidad << "\n";
-
-                std::string confirmar;
-                std::cout << "Son correctos? (s/n): ";
-                getline(std::cin, confirmar);
-
-                if (confirmar == "s" || confirmar == "S") {
-                    Doctor nuevoDoctor(nombre, id, especialidad);
-                    doctores.push_back(nuevoDoctor);
-                    std::cout << "Doctor registrado\n";
-                    datosValidos = true;
-                }
-            }
+            doctores.push_back(Doctor(nombre, id, especialidad));
+            std::cout << "Doctor registrado\n";
             break;
         }
         case 2: {
+            std::cout << "ID a buscar: ";
             std::string idBuscar;
-            std::cout << "ID del doctor a buscar: ";
             getline(std::cin, idBuscar);
 
-            bool encontrado = false;
-            for (int i = 0; i < doctores.size(); i++) {
-                if (doctores[i].getId() == idBuscar) {
-                    std::cout << "Doctor encontrado:\n";
-                    std::cout << "Nombre: " << doctores[i].getNombre() << "\n";
-                    std::cout << "Especialidad: " << doctores[i].getEspecialidad() << "\n";
-                    encontrado = true;
+            for (const auto& doctor : doctores) {
+                if (doctor.getId() == idBuscar) {
+                    std::cout << "Nombre: " << doctor.getNombre() << "\n"
+                        << "Especialidad: " << doctor.getEspecialidad() << "\n";
                     break;
                 }
-            }
-            if (!encontrado) {
-                std::cout << "Doctor no encontrado\n";
             }
             break;
         }
         case 3: {
-            if (doctores.size() == 0) {
-                std::cout << "No hay doctores registrados\n";
-            }
-            else {
-                std::cout << "Lista de doctores:\n";
-                for (int i = 0; i < doctores.size(); i++) {
-                    std::cout << "ID: " << doctores[i].getId()
-                        << " - Nombre: " << doctores[i].getNombre()
-                        << " - Especialidad: " << doctores[i].getEspecialidad() << "\n";
-                }
+            for (const auto& doctor : doctores) {
+                std::cout << "ID: " << doctor.getId()
+                    << " - Nombre: " << doctor.getNombre()
+                    << " - Especialidad: " << doctor.getEspecialidad() << "\n";
             }
             break;
         }
         case 4: {
-            std::string idEliminar;
             std::cout << "ID del doctor a eliminar: ";
+            std::string idEliminar;
             getline(std::cin, idEliminar);
 
             bool encontrado = false;
-            for (int i = 0; i < doctores.size(); i++) {
+            for (size_t i = 0; i < doctores.size(); i++) {
                 if (doctores[i].getId() == idEliminar) {
+                    // Verificar si el doctor tiene citas
                     bool tieneCitas = false;
-                    for (const Cita& cita : citas) {
+                    for (const auto& cita : citas) {
                         if (cita.getIdDoctor() == idEliminar) {
                             tieneCitas = true;
                             break;
@@ -429,7 +339,7 @@ void gestionDoctores() {
                         std::cout << "No se puede eliminar el doctor porque tiene citas programadas\n";
                     }
                     else {
-                        std::cout << "Estas segura de eliminar al doctor " << doctores[i].getNombre() << "? (s/n): ";
+                        std::cout << "Estas seguro de eliminar al doctor " << doctores[i].getNombre() << "? (s/n): ";
                         std::string confirmar;
                         getline(std::cin, confirmar);
 
@@ -447,122 +357,83 @@ void gestionDoctores() {
             }
             break;
         }
-        case 5:
-            volver = true;
-            break;
         default:
-            std::cout << "Opcion no valida\n";
+            std::cout << "Opcion invalida\n";
         }
     }
 }
 
 void gestionCitas() {
-    int opcion;
-    bool volver = false;
+    while (true) {
+        std::cout << "\nGestion de Citas\n"
+            << "1. Programar cita\n"
+            << "2. Buscar cita\n"
+            << "3. Listar citas\n"
+            << "4. Eliminar cita\n"
+            << "5. Volver\n"
+            << "Opcion: ";
 
-    while (!volver) {
-        std::cout << "\nGestion de Citas\n";
-        std::cout << "Citas registradas: " << citas.size() << "\n";
-        std::cout << "1. Programar cita\n";
-        std::cout << "2. Buscar cita\n";
-        std::cout << "3. Listar citas\n";
-        std::cout << "4. Eliminar cita\n";
-        std::cout << "5. Volver\n";
-        std::cout << "Seleccione una opcion: ";
+        int opcion;
         std::cin >> opcion;
         limpiarBuffer();
+
+        if (opcion == 5) break;
 
         switch (opcion) {
         case 1: {
             std::string fecha, hora, idPaciente, idDoctor;
 
-            while (true) {
+            do {
                 std::cout << "Fecha (YYYY-MM-DD): ";
                 getline(std::cin, fecha);
-                if (validarFormatoFecha(fecha)) {
-                    break;
-                }
-            }
+            } while (!validarFormatoFecha(fecha));
 
-            while (true) {
+            do {
                 std::cout << "Hora (HH:MM): ";
                 getline(std::cin, hora);
-                if (validarFormatoHora(hora)) {
-                    break;
-                }
-            }
+            } while (!validarFormatoHora(hora));
 
-            while (true) {
+            bool pacienteValido = false;
+            do {
                 std::cout << "ID del paciente: ";
                 getline(std::cin, idPaciente);
-
-                bool pacienteExiste = false;
-                for (int i = 0; i < pacientes.size(); i++) {
-                    if (pacientes[i].getId() == idPaciente) {
-                        pacienteExiste = true;
+                for (const auto& paciente : pacientes) {
+                    if (paciente.getId() == idPaciente) {
+                        pacienteValido = true;
                         break;
                     }
                 }
+                if (!pacienteValido) std::cout << "Paciente no encontrado\n";
+            } while (!pacienteValido);
 
-                if (validarSoloNumeros(idPaciente) && pacienteExiste) {
-                    break;
-                }
-
-                if (!pacienteExiste) {
-                    std::cout << "Error: Paciente no encontrado\n";
-                }
-            }
-
-            while (true) {
+            bool doctorValido = false;
+            do {
                 std::cout << "ID del doctor: ";
                 getline(std::cin, idDoctor);
-
-                bool doctorExiste = false;
-                for (int i = 0; i < doctores.size(); i++) {
-                    if (doctores[i].getId() == idDoctor) {
-                        doctorExiste = true;
+                for (const auto& doctor : doctores) {
+                    if (doctor.getId() == idDoctor) {
+                        doctorValido = true;
                         break;
                     }
                 }
+                if (!doctorValido) std::cout << "Doctor no encontrado\n";
+            } while (!doctorValido);
 
-                if (validarSoloNumeros(idDoctor) && doctorExiste) {
-                    break;
-                }
-
-                if (!doctorExiste) {
-                    std::cout << "Error: Doctor no encontrado\n";
-                }
-            }
-
-            std::cout << "\nDatos de la cita:\n";
-            std::cout << "Fecha: " << fecha << "\n";
-            std::cout << "Hora: " << hora << "\n";
-            std::cout << "ID Paciente: " << idPaciente << "\n";
-            std::cout << "ID Doctor: " << idDoctor << "\n";
-
-            std::string confirmar;
-            std::cout << "Son correctos? (s/n): ";
-            getline(std::cin, confirmar);
-
-            if (confirmar == "s" || confirmar == "S") {
-                Cita nuevaCita(fecha, hora, idPaciente, idDoctor);
-                citas.push_back(nuevaCita);
-                std::cout << "Cita programada\n";
-            }
+            citas.push_back(Cita(fecha, hora, idPaciente, idDoctor));
+            std::cout << "Cita programada\n";
             break;
         }
         case 2: {
-            std::string idBuscar;
             std::cout << "ID del paciente: ";
+            std::string idBuscar;
             getline(std::cin, idBuscar);
 
             bool encontrado = false;
-            for (int i = 0; i < citas.size(); i++) {
-                if (citas[i].getIdPaciente() == idBuscar) {
-                    std::cout << "Cita encontrada:\n";
-                    std::cout << "Fecha: " << citas[i].getFecha() << "\n";
-                    std::cout << "Hora: " << citas[i].getHora() << "\n";
-                    std::cout << "ID Doctor: " << citas[i].getIdDoctor() << "\n";
+            for (const auto& cita : citas) {
+                if (cita.getIdPaciente() == idBuscar) {
+                    std::cout << "Fecha: " << cita.getFecha() << "\n"
+                        << "Hora: " << cita.getHora() << "\n"
+                        << "ID Doctor: " << cita.getIdDoctor() << "\n";
                     encontrado = true;
                 }
             }
@@ -572,17 +443,11 @@ void gestionCitas() {
             break;
         }
         case 3: {
-            if (citas.size() == 0) {
-                std::cout << "No hay citas programadas\n";
-            }
-            else {
-                std::cout << "Lista de citas:\n";
-                for (int i = 0; i < citas.size(); i++) {
-                    std::cout << "Fecha: " << citas[i].getFecha()
-                        << " - Hora: " << citas[i].getHora()
-                        << " - Paciente ID: " << citas[i].getIdPaciente()
-                        << " - Doctor ID: " << citas[i].getIdDoctor() << "\n";
-                }
+            for (const auto& cita : citas) {
+                std::cout << "Fecha: " << cita.getFecha()
+                    << " - Hora: " << cita.getHora()
+                    << " - ID Paciente: " << cita.getIdPaciente()
+                    << " - ID Doctor: " << cita.getIdDoctor() << "\n";
             }
             break;
         }
@@ -596,12 +461,12 @@ void gestionCitas() {
             getline(std::cin, hora);
 
             bool encontrado = false;
-            for (int i = 0; i < citas.size(); i++) {
+            for (size_t i = 0; i < citas.size(); i++) {
                 if (citas[i].getIdPaciente() == idPaciente &&
                     citas[i].getFecha() == fecha &&
                     citas[i].getHora() == hora) {
 
-                    std::cout << "Estas segura de eliminar la cita? (s/n): ";
+                    std::cout << "Estas seguro de eliminar la cita? (s/n): ";
                     std::string confirmar;
                     getline(std::cin, confirmar);
 
@@ -618,33 +483,31 @@ void gestionCitas() {
             }
             break;
         }
-        case 5:
-            volver = true;
-            break;
         default:
-            std::cout << "Opcion no valida\n";
+            std::cout << "Opcion invalida\n";
         }
     }
 }
 
+// Función principal del menú (Sesión 2 - Funciones)
 void mostrarMenu() {
-    std::cout << "\n=== Hospital MSMK ===\n";
-    std::cout << "1. Gestion de Pacientes\n";
-    std::cout << "2. Gestion de Doctores\n";
-    std::cout << "3. Gestion de Citas\n";
-    std::cout << "4. Salir\n";
-    std::cout << "Seleccione una opcion: ";
+    std::cout << "\n=== Hospital MSMK ===\n"
+        << "1. Gestion de Pacientes\n"
+        << "2. Gestion de Doctores\n"
+        << "3. Gestion de Citas\n"
+        << "4. Salir\n"
+        << "Opcion: ";
 }
 
+// Función principal (Sesión 1 y 2)
 int main() {
-    int opcion;
-    bool ejecutar = true;
-
-    std::cout << "Iniciando sistema...\n";
     cargarDatos();
 
+    bool ejecutar = true;
     while (ejecutar) {
         mostrarMenu();
+
+        int opcion;
         std::cin >> opcion;
         limpiarBuffer();
 
@@ -659,13 +522,11 @@ int main() {
             gestionCitas();
             break;
         case 4:
-            std::cout << "Guardando datos...\n";
             guardarDatos();
             ejecutar = false;
-            std::cout << "Gracias por usar el sistema\n";
             break;
         default:
-            std::cout << "Opcion no valida\n";
+            std::cout << "Opcion invalida\n";
         }
     }
 
