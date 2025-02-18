@@ -1,55 +1,60 @@
-﻿#include <iostream>
-#include <vector>
-#include "Paciente.hpp"
-#include "Doctor.hpp"
-#include "Cita.hpp"
+﻿#include "Cita.hpp"
 
-std::vector<Paciente> pacientes;
-std::vector<Doctor> doctores;
-std::vector<Cita> citas;
-
-void mostrarMenu() {
-    std::cout << "\n=== Sistema de Gestión Hospitalaria ===\n";
-    std::cout << "1. Gestión de Pacientes\n";
-    std::cout << "2. Gestión de Doctores\n";
-    std::cout << "3. Gestión de Citas\n";
-    std::cout << "4. Salir\n";
-    std::cout << "Seleccione una opción: ";
+// Constructor vacío
+Cita::Cita() {
+    fecha = "";
+    hora = "";
+    idPaciente = "";
+    idDoctor = "";
+    urgente = false;
 }
 
-int main() {
-    int opcion;
-    bool ejecutar = true;
+// Constructor con parámetros
+Cita::Cita(std::string fecha, std::string hora, std::string idPaciente, std::string idDoctor) {
+    this->fecha = fecha;
+    this->hora = hora;
+    this->idPaciente = idPaciente;
+    this->idDoctor = idDoctor;
+    this->urgente = false;
+}
 
-    while (ejecutar) {
-        mostrarMenu();
-        std::cin >> opcion;
+// Getters y setters
+std::string Cita::getFecha() const {
+    return fecha;
+}
 
-        switch (opcion) {
-        case 1:
-            std::cout << "\nGestión de Pacientes\n";
-            std::cout << "Pacientes registrados: " << pacientes.size() << "\n";
-            break;
-        case 2:
-            std::cout << "\nGestión de Doctores\n";
-            std::cout << "Doctores registrados: " << doctores.size() << "\n";
-            break;
-        case 3:
-            std::cout << "\nGestión de Citas\n";
-            std::cout << "Citas registradas: " << citas.size() << "\n";
-            break;
-        case 4:
-            ejecutar = false;
-            std::cout << "Gracias por usar el sistema\n";
-            break;
-        default:
-            std::cout << "Opción no válida\n";
-        }
-    }
+void Cita::setFecha(std::string fecha) {
+    this->fecha = fecha;
+}
 
-    std::cout << "\nPresione Enter para salir...";
-    std::cin.ignore();
-    std::cin.get();
+std::string Cita::getHora() const {
+    return hora;
+}
 
-    return 0;
+void Cita::setHora(std::string hora) {
+    this->hora = hora;
+}
+
+std::string Cita::getIdPaciente() const {
+    return idPaciente;
+}
+
+void Cita::setIdPaciente(std::string id) {
+    this->idPaciente = id;
+}
+
+std::string Cita::getIdDoctor() const {
+    return idDoctor;
+}
+
+void Cita::setIdDoctor(std::string id) {
+    this->idDoctor = id;
+}
+
+bool Cita::getUrgente() const {
+    return urgente;
+}
+
+void Cita::setUrgente(bool urgente) {
+    this->urgente = urgente;
 }
